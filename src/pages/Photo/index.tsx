@@ -14,13 +14,13 @@ import { ListContainer, ListItem, MainContainer } from "./styles";
 import ReactLoading from "react-loading";
 import Webcam from "react-webcam";
 
-interface IStateProps {
-  nunota: number;
-}
+// interface IStateProps {
+//   nunota: number;
+// }
 
-interface IImage {
-  img: string;
-}
+// interface IImage {
+//   img: string;
+// }
 
 const WebcamComponent = () => <Webcam />
 const videoConstraints = {
@@ -44,7 +44,7 @@ export const Photos = () => {
   const [data, setData] = useState([] as IImage[]);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  const { nunota } = location?.state as IStateProps;
+  //const { nunota } = location?.state as IStateProps;
 
   const videoConstraints = {
     facingMode: { exact: 'environment' }
@@ -68,15 +68,15 @@ export const Photos = () => {
 
   // const [showCamera, setShowCamera] = useState(false)
 
-  const fetchData = async () => {
-    setLoading(true);
-    const response = await api.get(`/ticket/id?nunota=${nunota}`);
-    console.log(response.data);
-    setLoading(false);
-    if (response?.data) {
-      setData(response?.data);
-    }
-  };
+  // const fetchData = async () => {
+  //   setLoading(true);
+  //   const response = await api.get(`/ticket/id?nunota=${nunota}`);
+  //   console.log(response.data);
+  //   setLoading(false);
+  //   if (response?.data) {
+  //     setData(response?.data);
+  //   }
+  // };
 
   // const verify = () => {
   //   if (!showCamera) {
