@@ -89,9 +89,9 @@ export const Photos = () => {
   //   }
   // }
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   return (
     <div
