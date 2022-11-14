@@ -18,9 +18,9 @@ import Webcam from "react-webcam";
 //   nunota: number;
 // }
 
-// interface IImage {
-//   img: string;
-// }
+interface IImage {
+  img: string;
+}
 
 const WebcamComponent = () => <Webcam />
 const videoConstraints = {
