@@ -7,7 +7,7 @@ import { Photos } from "../pages/Photo";
 
 export const AppRoutes = () => (
   <Routes>
-    <Route path="/" element={<Login />} />
+    <Route path="/" element={<Photos />} />
     <Route path="/invoices" element={<Invoices />} />
     <Route path="/qrcode" element={<QRCodePage />} />
     <Route path="/takePhoto" element={<Photos/>}/>

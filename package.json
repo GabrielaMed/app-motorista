@@ -63,6 +63,7 @@
   "devDependencies": {
     "@types/styled-components": "^5.1.25",
     "@types/tough-cookie": "^4.0.2",
-    "@types/utf8": "^3.0.1"
+    "@types/utf8": "^3.0.1",
+    "netlify-cli": "^12.1.1"
   }
 }
