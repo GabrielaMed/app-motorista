@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "name": "app-hom-gestor-8083",
+      "script": "yarn",
+      "interpreter": "none",
+      "args": "serve -s build -p 8083",
+      "watch": true
+    }
+  ]
+}
