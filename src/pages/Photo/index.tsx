@@ -47,8 +47,8 @@ export const Photos = () => {
   //const { nunota } = location?.state as IStateProps;
 
   const videoConstraints = {
-    facingMode: { exact: 'environment' }
-    //facingMode: { exact: "user"},
+    //facingMode: { exact: 'environment' }
+    facingMode: { exact: "user"},
   }
 
   //const webcamRef = useRef<Webcam>(null)
