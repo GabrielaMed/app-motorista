@@ -18,6 +18,8 @@ export const ListContainer = styled.ul`
   margin: 0px;
   padding: 0.4rem;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
 `;
 

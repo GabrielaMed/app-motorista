@@ -287,7 +287,6 @@ export const Invoices = () => {
             variant="warning"
             onClick={handlePhoto}
             style={{ cursor: "pointer", width: "3rem" }}
-            
           >
             <MdCameraAlt size={16} color={"black"} />
           </Button>

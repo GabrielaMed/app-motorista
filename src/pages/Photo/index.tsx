@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "react-bootstrap";
-import {
-  MdArrowBack,
-  MdAssignment,
-  MdCameraAlt
-} from "react-icons/md";
+import { MdArrowBack, MdAssignment, MdCameraAlt } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
 import { DefaultPalettColors } from "../../assets/colors";
 import Footer from "../../components/Footer";
@@ -13,85 +9,81 @@ import { api } from "../../services/api";
 import { ListContainer, ListItem, MainContainer } from "./styles";
 import ReactLoading from "react-loading";
 import Webcam from "react-webcam";
+import { dataURLtoFile } from "../../utils/base64";
 
-// interface IStateProps {
-//   nunota: number;
-// }
+interface IStateProps {
+  nunota: number;
+}
 
 interface IImage {
   img: string;
 }
 
-const WebcamComponent = () => <Webcam />
-const videoConstraints = {
-  width: 400,
-  height: 400,
-  facingMode: 'user',
-}
-
 export const Photos = () => {
-
-  const [picture, setPicture] = useState('')
-  const webcamRef = React.useRef(null)
-  // const capture = React.useCallback(() => {
-  //   const pictureSrc = webcamRef.current.getScreenshot()
-  //   setPicture(pictureSrc)
-  // })
-
-
-
   const navigate = useNavigate();
   const [data, setData] = useState([] as IImage[]);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  //const { nunota } = location?.state as IStateProps;
+  const { nunota } = location?.state as IStateProps;
+  const [showCamera, setShowCamera] = useState(false);
+
+  const fetchData = async () => {
+    setLoading(true);
+    const response = await api.get(`/ticket/id?nunota=${nunota}`);
+    console.log(response.data);
+    setLoading(false);
+    if (response?.data) {
+      setData(response?.data);
+    }
+  };
+
+  const postPhoto = async (imageFromCamera: string) => {
+    const file = dataURLtoFile(imageFromCamera, "photo.png");
+    console.log(file);
+    const data = new FormData();
+    data.append("file", file, file.name);
+    const config = {
+      headers: { "Content-Type": "multipart/form-data" },
+    };
+    const response = await api
+      .post(`/takePhoto?nunota=${nunota}`, data, config)
+      .then((response) => {
+        console.log(response.data);
+      });
+    console.log("response-post:", response);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const videoConstraints = {
-    //facingMode: { exact: 'environment' }
-    facingMode: { exact: "user"},
-  }
+    // facingMode: { exact: "environment" },
+    //facingMode: "user",
+  };
 
-  //const webcamRef = useRef<Webcam>(null)
-  // const [imageFromCamera, setImageFromCamera] = useState('')
+  const webcamRef = useRef<Webcam>(null);
 
-  // const capture = useCallback(() => {
-  //   if (webcamRef) {
-  //     console.log(webcamRef, "cap1")
-  //     const imageFromCamera = webcamRef?.current?.getScreenshot({width: 1920, height: 1080})
-  //     if (imageFromCamera) {
-  //       setShowCamera(false)
-  //       setImageFromCamera(imageFromCamera)
+  const capture = useCallback(async () => {
+    if (webcamRef) {
+      const imageFromCamera = webcamRef?.current?.getScreenshot();
+      if (imageFromCamera) {
+        setShowCamera(false);
+        await postPhoto(imageFromCamera);
+        await fetchData();
+      }
+    }
+  }, [webcamRef]);
 
-  //     }
-  //   }
-  // }, [webcamRef])
-
-  // const [showCamera, setShowCamera] = useState(false)
-
-  // const fetchData = async () => {
-  //   setLoading(true);
-  //   const response = await api.get(`/ticket/id?nunota=${nunota}`);
-  //   console.log(response.data);
-  //   setLoading(false);
-  //   if (response?.data) {
-  //     setData(response?.data);
-  //   }
-  // };
-
-  // const verify = () => {
-  //   if (!showCamera) {
-  //     setShowCamera(true)
-  //     console.log("cam true")
-  //   } else {
-  //     console.log("capture")
-  //     capture();
-
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  const takePhoto = async () => {
+    setLoading(true);
+    if (showCamera) {
+      await capture();
+    } else {
+      setShowCamera(true);
+    }
+    setLoading(false);
+  };
 
   return (
     <div
@@ -108,17 +100,40 @@ export const Photos = () => {
         }
         label={`Fotos Nota`}
       />
-      <Webcam
-        audio={false}
-        height={400}
-        width={400}
-        mirrored
-        screenshotFormat="image/jpeg"
-        videoConstraints={videoConstraints}
-      />
+      {showCamera && (
+        <div
+          style={{
+            maxWidth: "90%",
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            justifyContent: "center",
+            margin: "auto",
+            border: "3px solid orange",
+          }}
+        >
+          <Webcam
+            audio={false}
+            ref={webcamRef}
+            width={350}
+            screenshotFormat="image/jpeg"
+            videoConstraints={videoConstraints}
+          />
+
+          {/* <Button onClick={capture}>
+            <MdCameraAlt size={24} color={"white"} />
+          </Button> */}
+        </div>
+      )}
       <MainContainer>
         {loading ? (
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center",
+            }}
+          >
             <ReactLoading
               type={"cylon"}
               color={"#ff8000"}
@@ -127,7 +142,6 @@ export const Photos = () => {
             />
           </div>
         ) : (
-
           <ListContainer>
             {data?.length > 0 &&
               data?.map((image, idx) => (
@@ -135,7 +149,6 @@ export const Photos = () => {
                   <img src={`data:image/jpeg;base64,${image.img}`} alt=""></img>
                 </ListItem>
               ))}
-
           </ListContainer>
         )}
       </MainContainer>
@@ -153,6 +166,7 @@ export const Photos = () => {
         <div style={{ display: "flex", justifyContent: "space-around" }}>
           <Button
             variant="warning"
+            onClick={takePhoto}
             style={{ cursor: "pointer", width: "3rem" }}
           >
             <MdCameraAlt size={16} color={"black"} />

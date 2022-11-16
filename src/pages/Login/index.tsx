@@ -42,7 +42,7 @@ const Login: React.FC = () => {
             onChange={(e) => setCpf(e.target.value)}
             value={cpf}
             name="cpf"
-            format="###.###.###-##"
+            format="##############"
             className={"form-control"}
           />
           <Form.Label style={{ color: "white", marginTop: "1rem" }}>
